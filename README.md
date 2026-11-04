@@ -1,228 +1,69 @@
-# Finance Control Microservice - Onion Architecture
+# Finance Control
 
-A clean, minimal .NET 8 Web API microservice for personal finance control, built following **Onion Architecture** principles.
+Projeto legado de controle financeiro familiar e repositório de referência para construir um workflow agêntico de engenharia de software. A prioridade atual é estabelecer um processo de desenvolvimento rastreável e supervisionado antes de ampliar as funcionalidades financeiras.
 
-## 🏗️ Onion Architecture
+## Estado atual
 
-This project implements **Onion Architecture**, a refined version of Clean Architecture that emphasizes:
+O repositório contém uma solução ASP.NET Core em C# com projetos separados para domínio, aplicação, infraestrutura e API, além de um projeto de testes xUnit.
 
-- **Dependency Direction**: Dependencies point inward - outer layers depend on inner layers, never the reverse
-- **Core Domain**: Business entities and rules at the center with no external dependencies
-- **Application Services**: Business logic and use cases that orchestrate domain objects
-- **Infrastructure**: External concerns like databases, APIs, and frameworks
-- **API Layer**: Presentation layer that depends on all inner layers
+- A solução e os projetos atualmente têm como alvo **.NET 8**.
+- A API expõe operações básicas de consulta e criação de transações em `GET /api/transactions` e `POST /api/transactions`.
+- A persistência configurada na API usa o provider **Entity Framework Core InMemory**. Os dados não são duráveis entre reinicializações.
+- Os testes atuais cobrem regras básicas da entidade `Transaction` e operações do repositório usando banco InMemory.
+- Ainda não há persistência relacional, migrations, importador da planilha financeira nem interface de consultas SQL.
 
-### Architecture Layers
+As especificações em `docs/` descrevem a direção desejada, que ainda não corresponde integralmente à implementação. Consulte `AGENTS.md` antes de trabalhar no repositório e o backlog em `docs/planning/backlog-adaptacao.md` para as lacunas conhecidas. Há decisões de arquitetura a reconciliar antes da migração da persistência.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    API Layer (Presentation)                 │
-│                    - Controllers                           │
-│                    - Middleware                            │
-│                    - Configuration                         │
-└─────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────┐
-│                Infrastructure Layer (External)              │
-│                - Database Context                          │
-│                - Repository Implementations                │
-│                - External Service Clients                  │
-└─────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Application Layer (Business Logic)            │
-│              - Use Cases                                   │
-│              - Command/Query Handlers                     │
-│              - Business Rules                             │
-│              - Interface Definitions                      │
-└─────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Domain Layer (Core)                      │
-│                   - Entities                              │
-│                   - Value Objects                         │
-│                   - Domain Services                       │
-│                   - Business Rules                        │
-└─────────────────────────────────────────────────────────────┘
-```
+## Estrutura
 
-## 📁 Project Structure
-
-```
+```text
+FinanceControl.sln
 src/
-├── FinanceControl.Domain/           # Core business entities (no dependencies)
-│   └── Entities/
-│       └── Transaction.cs          # Domain entity with business rules
-├── FinanceControl.Application/       # Business logic and use cases
-│   ├── Commands/                   # CQRS commands
-│   ├── Queries/                    # CQRS queries
-│   ├── Handlers/                   # Command/Query handlers
-│   ├── Interfaces/                 # Repository interfaces
-│   └── UseCases/                   # Business use cases
-├── FinanceControl.Infrastructure/   # Data access and external services
-│   ├── Data/                       # EF Core context and unit of work
-│   └── Repositories/               # Repository implementations
-└── FinanceControl.Api/              # Web API controllers and configuration
-
+  FinanceControl.Domain/         # Entidade e regras básicas de transação
+  FinanceControl.Application/    # Comandos, consultas, handlers e interfaces
+  FinanceControl.Infrastructure/ # DbContext InMemory e repositório
+  FinanceControl.Api/            # API ASP.NET Core
 tests/
-└── FinanceControl.Tests/            # Unit tests for all layers
+  FinanceControl.Tests/          # Testes xUnit
+docs/
+  product/                       # Requisitos de produto
+  architecture/                  # Direção arquitetural do sistema
+  decisions/                     # Decisões do ambiente agêntico
+  planning/                      # Backlog de adaptação
 ```
 
-## 🚀 Key Features
-
-- **Onion Architecture**: Clean dependency direction and separation of concerns
-- **Domain-Driven Design**: Rich domain entities with business rules
-- **CQRS Pattern**: Commands and queries separated using MediatR
-- **Repository Pattern**: Abstracted data access through interfaces
-- **Unit of Work**: Transaction management and consistency
-- **In-Memory Database**: Entity Framework Core with in-memory provider for development
-- **Minimal Dependencies**: Only essential .NET packages
-
-## 🏛️ Architecture Benefits
-
-### 1. **Dependency Inversion**
-- Outer layers depend on inner layers
-- Domain layer has zero external dependencies
-- Easy to swap implementations (e.g., different databases)
-
-### 2. **Testability**
-- Each layer can be tested in isolation
-- Mock interfaces for external dependencies
-- Domain logic tested without infrastructure
-
-### 3. **Maintainability**
-- Clear separation of concerns
-- Business rules centralized in domain
-- Easy to modify without affecting other layers
-
-### 4. **Scalability**
-- Add new features by extending layers
-- Replace infrastructure without changing business logic
-- Support multiple presentation layers (API, gRPC, etc.)
-
-## 🛠️ Prerequisites
+## Requisitos
 
 - .NET 8 SDK
-- Visual Studio 2022 or VS Code
 
-## 🔧 Getting Started
-
-### 1. Build the Solution
+Confirme a versão instalada com:
 
 ```bash
-dotnet build
+dotnet --version
 ```
 
-### 2. Run the API
+## Compilar e testar
+
+Na raiz do repositório:
 
 ```bash
-cd src/FinanceControl.Api
-dotnet run
+dotnet restore FinanceControl.sln
+dotnet build FinanceControl.sln --no-restore
+dotnet test FinanceControl.sln --no-build
 ```
 
-The API will be available at `https://localhost:7000` (or the port shown in the console).
-
-### 3. Run Tests
+## Executar a API
 
 ```bash
-dotnet test
+dotnet run --project src/FinanceControl.Api/FinanceControl.Api.csproj
 ```
 
-## 📡 API Endpoints
+A API informa no terminal os endereços locais usados. A documentação Swagger é habilitada pela configuração atual da aplicação. A base InMemory é temporária e adequada apenas ao estado de desenvolvimento atual.
 
-### Transactions
+## Workflow agêntico
 
-- **GET** `/api/transactions` - Retrieve all transactions
-- **POST** `/api/transactions` - Add a new transaction
+O ambiente agêntico está em fase inicial. O `AGENTS.md` define as instruções operacionais para agentes; as especificações em `docs/` definem o contexto de produto e arquitetura. O fluxo começa com execução supervisionada: tarefas delimitadas, verificações pertinentes, revisão do diff e relato dos resultados.
 
-#### Transaction Model
+## Direção futura
 
-```json
-{
-  "amount": 100.50,
-  "category": "Food",
-  "date": "2024-01-15T10:30:00Z",
-  "description": "Lunch at restaurant"
-}
-```
-
-## 🧪 Testing
-
-The solution includes comprehensive unit tests:
-
-- **Domain Tests**: Business rule validation
-- **Application Tests**: Use case logic
-- **Infrastructure Tests**: Repository operations
-- **Integration Tests**: End-to-end scenarios
-
-### Test Examples
-
-- `AddTransaction_ShouldCreateNewTransaction` - Tests transaction creation
-- `GetTransactions_ShouldReturnAllTransactions` - Tests transaction retrieval
-- `Transaction_Create_WithInvalidAmount_ShouldThrowException` - Tests business rules
-- `Transaction_Create_WithEmptyCategory_ShouldThrowException` - Tests validation
-
-## 🔮 Future Enhancements
-
-This Onion Architecture foundation makes it easy to add:
-
-### **Authentication & Authorization**
-- JWT tokens, user management
-- Role-based access control
-- OAuth integration
-
-### **Real Database**
-- SQL Server, PostgreSQL with migrations
-- Database-specific optimizations
-- Connection pooling and resilience
-
-### **Advanced Features**
-- Budgets, reports, categories
-- Recurring transactions
-- Financial analytics and insights
-
-### **Infrastructure**
-- Docker containerization
-- AWS integration (S3, DynamoDB, Lambda)
-- Message queues (SQS, RabbitMQ)
-- Caching (Redis, ElastiCache)
-
-### **Architecture Extensions**
-- Event sourcing and CQRS
-- Microservices communication
-- API versioning and rate limiting
-- Health checks and monitoring
-
-## 🏛️ Design Principles
-
-- **Dependency Inversion**: High-level modules don't depend on low-level modules
-- **Single Responsibility**: Each class has one reason to change
-- **Open/Closed**: Open for extension, closed for modification
-- **Interface Segregation**: Clients don't depend on interfaces they don't use
-- **Dependency Injection**: Services are injected, not created
-- **Domain Primacy**: Business rules are in the domain, not in infrastructure
-
-## 📦 Dependencies
-
-- **MediatR**: CQRS implementation
-- **Entity Framework Core**: Data access with in-memory provider
-- **Swagger**: API documentation
-- **xUnit**: Unit testing framework
-
-## 🚀 Deployment Ready
-
-The project is configured for easy expansion:
-- Clean Onion Architecture with proper dependency direction
-- Comprehensive dependency injection
-- Repository pattern with unit of work
-- CQRS architecture for scalability
-- Minimal external dependencies
-- Comprehensive test coverage
-- Easy to add new features and swap implementations
-
-## 📝 License
-
-This project is open source and available under the MIT License.
+As especificações propõem evoluir gradualmente para uma base financeira rastreável, com importação idempotente do histórico e consultas seguras. Framework, banco de dados, migrations e outros pontos ainda precisam ser reconciliados/confirmados. Não interprete a direção documentada como funcionalidade já disponível.

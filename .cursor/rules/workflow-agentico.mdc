@@ -1,0 +1,14 @@
+---
+description: Mantém o trabalho de engenharia supervisionado, rastreável e proporcional ao escopo.
+alwaysApply: true
+---
+
+# Workflow agêntico do projeto
+
+- Trate este repositório primeiro como ambiente de aprendizagem e avaliação de engenharia agêntica; o sistema financeiro é o domínio de referência.
+- Antes de mudar código, consulte `AGENTS.md` e os documentos pertinentes em `docs/`. Diferencie direção/proposta de comportamento já implementado e reporte divergências relevantes.
+- Confirme o estado do Git e preserve alterações existentes. Para tarefas não triviais, apresente plano curto, escopo, riscos e verificações disponíveis antes de implementar.
+- Trabalhe com execução supervisionada: faça mudanças delimitadas, valide o que for pertinente, revise o diff e entregue evidências. Não declare sucesso sem resultados observados.
+- Mantenha contexto, planejamento, implementação, validação e aprovação rastreáveis. Não adicione orquestração multiagente, infraestrutura ou métricas sem necessidade concreta.
+- Não execute ações destrutivas, publique, faça deploy, envie dados externos ou integre mudanças sem autorização explícita aplicável. Preserve a revisão humana nos pontos de risco.
+- Use `docs/planning/backlog-adaptacao.md` como registro de lacunas e propostas, não como autorização ou decisão aprovada.

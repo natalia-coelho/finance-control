@@ -1,0 +1,16 @@
+---
+description: Registra decisões relevantes de produto, engenharia e arquitetura nos documentos canônicos do projeto.
+alwaysApply: true
+---
+
+# Registro de decisões do projeto
+
+Ao tomar ou confirmar uma decisão relevante para regras de negócio, engenharia, arquitetura, segurança, dados ou workflow agêntico:
+
+1. Registre-a na mesma tarefa, antes de concluir, no documento canônico apropriado: `docs/product/PRD.md` para requisitos e regras de produto; `docs/architecture/architecture.md` para direção técnica e conceitos arquiteturais; `docs/decisions/` para decisões duradouras e seus motivos; ou `AGENTS.md` para procedimentos operacionais de agentes.
+2. Para uma decisão duradoura, crie um ADR em `docs/decisions/` com contexto, decisão, alternativas relevantes, consequências e estado. Use um nome sequencial ou descritivo consistente com os arquivos existentes.
+3. Diferencie claramente decisões aprovadas de propostas, hipóteses e questões em aberto. Não registre uma sugestão do agente como decisão tomada; solicite definição quando a escolha for necessária para implementar.
+4. Se a implementação revelar ou alterar uma decisão, atualize a documentação correspondente no mesmo diff. Evite duplicar o conteúdo: mantenha uma fonte canônica e referencie-a nos demais documentos.
+5. Na entrega, informe quais documentos foram atualizados e destaque decisões pendentes. Se nenhuma decisão relevante foi tomada, não crie registro artificial.
+
+Antes de registrar, consulte a documentação existente e verifique se a decisão já está documentada, se contradiz outra decisão ou se requer atualizar/revogar um registro anterior. Preserve o histórico e explicite mudanças de estado em vez de apagar decisões antigas sem justificativa.

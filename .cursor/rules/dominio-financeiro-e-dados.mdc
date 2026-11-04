@@ -1,0 +1,15 @@
+---
+description: Preserva invariantes financeiros, precisão, origem e integridade dos dados.
+alwaysApply: true
+---
+
+# Domínio financeiro e dados
+
+- Consulte `docs/product/PRD.md` e `docs/architecture/architecture.md` antes de alterar regras de domínio ou persistência. Não resolva por suposição questões marcadas como abertas ou adiadas.
+- Preserve a diferença entre compra, movimentação, parcela, fatura, pagamento, estorno/reembolso, recorrência e projeção. Evite contabilizar o mesmo evento duas vezes; pagamento de fatura não deve criar uma nova despesa.
+- Mantenha grupo, pagador, conta/cartão, categoria e natureza financeira como dimensões distintas. Uma categoria não determina se um lançamento é recorrente, parcelado ou pontual.
+- Mantenha valores previstos distintos dos realizados e trate data da compra, competência e data do pagamento separadamente quando aplicável.
+- Não use ponto flutuante binário para valores monetários. Mudanças de persistência devem considerar constraints, integridade referencial, transações e migrations versionadas; revise migrations antes de aplicá-las.
+- Preserve origem e rastreabilidade dos dados importados. Importações devem ser idempotentes e não sobrescrever silenciosamente edições feitas na aplicação.
+- Proteja histórico financeiro: não faça exclusões ou correções destrutivas sem regra definida e autorização aplicável.
+- Consultas analíticas devem ser somente leitura e respeitar limites definidos quando esse recurso existir.

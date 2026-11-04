@@ -1,0 +1,13 @@
+---
+description: Evita migrações implícitas e mantém mudanças técnicas compatíveis com o estado real do legado.
+alwaysApply: true
+---
+
+# Legado e evolução técnica
+
+- Confirme o estado dos arquivos de projeto, SDKs, dependências, persistência e testes antes de propor mudanças; o README e as especificações podem divergir do código.
+- A solução existente é legado .NET 8 com provider EF Core InMemory. As especificações descrevem direções ainda não plenamente implementadas. Não trate PostgreSQL, .NET 10, migrations, hospedagem ou módulos propostos como estado atual.
+- Antes de atualizar framework, dependências, banco, estrutura de projetos ou estratégia de migrations, consulte decisões e backlog, explicite impacto e validações e delimite a migração. Não misture migração ampla com feature de domínio sem necessidade.
+- Não implemente itens futuros apenas porque aparecem no backlog. Confirme decisões pendentes na fonte canônica antes de tomar escolhas que afetem arquitetura, segurança ou dados.
+- Descubra comandos confiáveis de build, teste e lint nos arquivos atuais. Execute somente verificações pertinentes e reporte comandos, resultados e falhas sem ocultá-las.
+- Evite dependências ou infraestrutura prematuras: microsserviços, orquestração própria, filas, Kubernetes, cloud e automação autônoma exigem necessidade concreta e decisão registrada.

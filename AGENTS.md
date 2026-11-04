@@ -32,7 +32,7 @@ Se uma verificação falhar, investigue e relate a falha. Não esconda, contorne
 
 ## Estado legado e compatibilidade
 
-O repositório contém atualmente uma solução `FinanceControl.sln`, projetos em `src/` e testes em `tests/`. O `README.md` descreve uma base .NET 8 com Onion Architecture; as especificações mais recentes apontam C#/.NET 10, monólito modular e PostgreSQL, mas também contêm propostas e decisões adiadas. Trate essa diferença como contexto a validar, não como autorização automática para migrar o legado.
+O repositório contém atualmente uma solução `FinanceControl.sln`, projetos em `src/` e testes em `tests/`, todos direcionados a .NET 10. O código ainda usa Entity Framework Core InMemory; as especificações descrevem uma direção de evolução para persistência relacional, mas essa mudança permanece fora do escopo de uma migração de framework.
 
 Antes de atualizar framework, dependências, banco, estrutura de projetos ou estratégia de migrations:
 

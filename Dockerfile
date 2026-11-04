@@ -1,11 +1,11 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ENV ASPNETCORE_ENVIRONMENT=Development
 WORKDIR /app
 COPY . .
 RUN dotnet restore "src/FinanceControl.Api/FinanceControl.Api.csproj"
 RUN dotnet publish "src/FinanceControl.Api/FinanceControl.Api.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 80

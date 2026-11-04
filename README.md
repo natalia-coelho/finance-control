@@ -6,7 +6,7 @@ Projeto legado de controle financeiro familiar e repositório de referência par
 
 O repositório contém uma solução ASP.NET Core em C# com projetos separados para domínio, aplicação, infraestrutura e API, além de um projeto de testes xUnit.
 
-- A solução e os projetos atualmente têm como alvo **.NET 8**.
+- A solução e os projetos têm como alvo **.NET 10**.
 - A API expõe operações básicas de consulta e criação de transações em `GET /api/transactions` e `POST /api/transactions`.
 - A persistência configurada na API usa o provider **Entity Framework Core InMemory**. Os dados não são duráveis entre reinicializações.
 - Os testes atuais cobrem regras básicas da entidade `Transaction` e operações do repositório usando banco InMemory.
@@ -34,7 +34,7 @@ docs/
 
 ## Requisitos
 
-- .NET 8 SDK
+- .NET 10 SDK
 
 Confirme a versão instalada com:
 

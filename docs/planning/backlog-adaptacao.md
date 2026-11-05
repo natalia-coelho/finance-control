@@ -1,7 +1,9 @@
 # Backlog de adaptação às novas especificações
 
-**Status:** proposta inicial baseada no repositório e na documentação disponíveis em 03/11/2026.  
+**Status:** acompanhamento atualizado em 05/11/2026, com base no repositório e na documentação disponíveis.
 **Objetivo:** preparar o projeto legado para evoluir segundo as especificações e estabelecer o workflow agêntico antes de ampliar o produto financeiro.
+
+**Legenda:** `[x]` concluído com evidência no repositório; `[ ]` pendente, parcial ou bloqueado por decisão/evidência. A conclusão de um item não aprova automaticamente itens dependentes.
 
 Este backlog registra lacunas observáveis, não decisões já aprovadas. Itens de produto e arquitetura ainda indefinidos devem ser esclarecidos antes de mudanças irreversíveis.
 
@@ -10,16 +12,16 @@ Este backlog registra lacunas observáveis, não decisões já aprovadas. Itens 
 ### B0 — Contexto e decisões
 
 - [ ] **B0.1 — Revisar divergências entre as especificações e estabelecer fontes canônicas.** Resolver a diferença entre a decisão agêntica (SQLite e hospedagem doméstica) e a arquitetura recente (PostgreSQL), confirmar a estratégia de migrations e reconciliar diferenças de escopo entre PRD e decisão arquitetural. Registrar decisões em documentos/ADRs; não codificar suposições.
-- [ ] **B0.2 — Inventariar o legado e atualizar o README.** Documentar o que existe de fato: solução e projetos, versão .NET, persistência InMemory, endpoints e testes disponíveis. Remover afirmações que não correspondam ao código, como banco relacional ou recursos de produção ainda não implementados.
-- [ ] **B0.3 — Definir convenções mínimas de contribuição.** Registrar requisitos para branch/commits se aplicável, revisão de diff, tratamento de configuração, documentação e evidências de conclusão, alinhados ao `AGENTS.md`.
+- [x] **B0.2 — Inventariar o legado e atualizar o README.** Evidência: `README.md` descreve a solução/projetos, alvo .NET 10, endpoints GET/POST, provider InMemory, testes existentes e ausência de persistência relacional, migrations, importador e SQL. Confirmado nos `.csproj`, `Program.cs`, controller e testes em 05/11/2026.
+- [ ] **B0.3 — Definir convenções mínimas de contribuição.** Parcial: `AGENTS.md` e regras em `.cursor/rules/` cobrem revisão de diff, configuração segura, documentação e evidências; convenções de branch/commits ainda não estão definidas (e podem ser dispensáveis para o fluxo atual).
 
 ### B1 — Fundação do workflow agêntico
 
-- [ ] **B1.1 — Definir contrato de entrada para tarefas.** Criar um modelo curto para solicitação, contexto, critérios de aceitação, restrições, risco e definição de pronto.
-- [ ] **B1.2 — Definir fluxo operacional supervisionado.** Documentar etapas de entendimento, plano, implementação, verificações, revisão e entrega, incluindo pontos de aprovação humana e limites de ações externas/destrutivas.
-- [ ] **B1.3 — Definir evidências e relatório de execução.** Padronizar registro de arquivos alterados, comandos executados, resultados, falhas, limitações e decisões pendentes; não introduzir plataforma de métricas antes de haver volume de uso.
+- [x] **B1.1 — Definir contrato de entrada para tarefas.** Evidência: seção “Modelo de solicitação ao agente” em `docs/agent-workflow/fluxo-implementacao-backlog.md` inclui objetivo, critérios de aceite, restrições/decisões e saída esperada. Risco não é campo explícito no modelo e permanece ponto de melhoria.
+- [x] **B1.2 — Definir fluxo operacional supervisionado.** Evidência: `docs/agent-workflow/fluxo-implementacao-backlog.md` documenta seleção, entendimento, aprovação, implementação, validação, revisão, dependências e limites; alinhado a `AGENTS.md` e à decisão agêntica.
+- [x] **B1.3 — Definir evidências e relatório de execução.** Evidência: o fluxo exige registrar arquivos/documentos, comandos e resultados, falhas, limitações e decisões pendentes; sem plataforma de métricas.
 - [ ] **B1.4 — Criar tarefas de referência para exercitar o fluxo.** Selecionar uma tarefa documental e uma pequena tarefa técnica sem impacto financeiro; avaliar se um agente consegue concluí-las com escopo controlado e validação reproduzível.
-- [ ] **B1.5 — Revisar AGENTS.md após as primeiras execuções.** Ajustar instruções com base em dificuldades reais; manter requisito e arquitetura nas respectivas fontes documentais.
+- [ ] **B1.5 — Revisar AGENTS.md após as primeiras execuções.** Aguardando evidências de execuções de referência; instruções operacionais já existem em `AGENTS.md` e nas regras do Cursor, mas ainda não há revisão baseada em resultados de B1.4.
 
 ### B2 — Base técnica reproduzível
 
@@ -70,3 +72,11 @@ B1.1–B1.4 podem avançar em paralelo com B0/B2 e orientam a execução dos dem
 - Implementar dashboards, automações financeiras ou classificação por IA antes de consolidar dados e regras.
 - Habilitar deploy, publicação ou integração autônoma sem histórico de confiabilidade e política aprovada.
 - Resolver por implementação questões que o PRD e a arquitetura mantêm explicitamente abertas.
+
+## Evidências e divergências verificadas em 05/11/2026
+
+- Estado do Git no início da atualização: havia alterações preexistentes em `.cursor/rules/registro-de-decisoes.mdc`, `.cursor/rules/aprendizado-evolutivo.mdc`, `.cursor/agents/` e `docs/agent-workflow/`; foram preservadas.
+- A solução e todos os projetos (`src/` e `tests/`) têm `TargetFramework` `net10.0`; os pacotes EF Core/InMemory estão em `10.0.14`. Isso contradiz o texto do agente `.cursor/agents/desenvolvedor-finance-control.md` e regras existentes que descrevem o legado como .NET 8.
+- A direção do banco segue sem decisão reconciliada: `docs/decisions/decisoes-arquiteturais-ambiente-agentico.md` indica SQLite, enquanto `docs/architecture/architecture.md` indica PostgreSQL. B0.1 continua pendente e bloqueia decisões dependentes.
+- A API usa EF Core InMemory e ainda define CORS com `AllowAnyOrigin`; não há projetos/arquivos de migrations, importador histórico ou consultas SQL read-only implementados.
+- Não foi executado build/teste nesta atualização documental; a atualização de status não dependeu de validação de compilação.

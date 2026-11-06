@@ -256,10 +256,11 @@ inspeção;
 utilizar SQL explícito quando isso tornar a consulta mais clara ou
 adequada;
 testar operações críticas de persistência contra PostgreSQL.
-A estratégia definitiva de migrations --- EF Core Migrations ou
-abordagem SQL-first --- ainda deverá ser confirmada antes da
-implementação. A decisão deverá considerar revisão, previsibilidade,
-facilidade de rollback e aderência ao aprendizado pretendido.
+EF Core Migrations versionadas no Git serão a fonte canônica do schema.
+Cada migration deverá ser revisada antes de ser aplicada. SQL explícito
+poderá ser usado em consultas e operações específicas quando trouxer
+clareza, sem criar uma segunda trilha de migrations concorrente. Esta
+decisão está registrada em `docs/decisions/ADR-002-ef-core-migrations.md`.
 
 6.3 Consultas SQL
 O PRD prevê consultas SQL para exploração dos dados.
@@ -312,6 +313,15 @@ Decision Record (ADR).
 O PRD continuará sendo a referência de requisitos de produto; este
 documento define a direção arquitetural e não substitui o PRD.
 
+As fontes canônicas do repositório são:
+
+- `docs/product/PRD.md`: requisitos, regras de negócio e escopo de produto/MVP.
+- `docs/architecture/architecture.md`: decisões e restrições técnicas da solução.
+- `docs/decisions/`: ADRs aprovados, com contexto, decisão e consequências; esta especificação referencia as decisões vigentes.
+- `docs/decisions/decisoes-arquiteturais-ambiente-agentico.md`: prioridade do projeto e operação do workflow agêntico. Trechos sobre escopo financeiro registram a direção do projeto de referência e devem ser reconciliados com o PRD; não substituem o catálogo de requisitos.
+- `docs/planning/backlog-adaptacao.md`: sequência, estado e evidências de execução, sem aprovar requisitos ou decisões.
+- `README.md`: estado implementado e comandos reproduzíveis.
+
 8. Estratégia de evolução por épicos
 A implementação deverá avançar em incrementos pequenos, cada um
 terminando em uma capacidade verificável.
@@ -356,6 +366,14 @@ A ordem e o conteúdo dos épicos deverão ser refinados conforme o PRD for
 detalhado. A lista não significa que todos os requisitos Must do PRD
 devam entrar no primeiro incremento.
 
+O primeiro incremento aprovado é um recorte transversal: E0 (fundação),
+o subconjunto de despesas de E1 (cadastro/consulta/edição básica), E2
+(importação histórica da planilha com validação e origem) e consultas SQL
+somente leitura de E5. Os demais requisitos do MVP permanecem no escopo
+do produto e serão distribuídos em incrementos posteriores. A definição
+está registrada no PRD, seção 5.1; os critérios de aceite detalhados
+serão elaborados em B4.1.
+
 9. Qualidade, testes e segurança
 9.1 Testes
 A estratégia de testes deverá crescer junto com o sistema:
@@ -396,8 +414,7 @@ como decisões arquiteturais fechadas:
 
 multi-tenancy e isolamento entre famílias;
 autenticação e autorização;
-deployment e hospedagem;
-estratégia final de migrations;
+procedimentos de deployment e detalhes operacionais de hospedagem (o cenário-alvo doméstico está descrito em `docs/decisions/decisoes-arquiteturais-ambiente-agentico.md`, seção 6.2);
 precisão e arredondamento monetário;
 pagamentos parciais, juros e encargos;
 regras completas de estornos, reembolsos e cancelamentos;

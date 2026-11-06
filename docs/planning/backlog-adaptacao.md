@@ -11,7 +11,7 @@ Este backlog registra lacunas observáveis, não decisões já aprovadas. Itens 
 
 ### B0 — Contexto e decisões
 
-- [ ] **B0.1 — Revisar divergências entre as especificações e estabelecer fontes canônicas.** Resolver a diferença entre a decisão agêntica (SQLite e hospedagem doméstica) e a arquitetura recente (PostgreSQL), confirmar a estratégia de migrations e reconciliar diferenças de escopo entre PRD e decisão arquitetural. Registrar decisões em documentos/ADRs; não codificar suposições.
+- [x] **B0.1 — Revisar divergências entre as especificações e estabelecer fontes canônicas.** Fontes canônicas explicitadas; PostgreSQL e EF Core Migrations registrados em ADR-001/002; MVP completo preservado conforme PRD e primeiro incremento delimitado; planilha existente definida como origem histórica, com CSV bancário separado. Evidências em `docs/product/PRD.md` §5.1, `docs/architecture/architecture.md` §7.1/§8 e `docs/decisions/reconciliacao-especificacoes.md`.
 - [x] **B0.2 — Inventariar o legado e atualizar o README.** Evidência: `README.md` descreve a solução/projetos, alvo .NET 10, endpoints GET/POST, provider InMemory, testes existentes e ausência de persistência relacional, migrations, importador e SQL. Confirmado nos `.csproj`, `Program.cs`, controller e testes em 05/11/2026.
 - [ ] **B0.3 — Definir convenções mínimas de contribuição.** Parcial: `AGENTS.md` e regras em `.cursor/rules/` cobrem revisão de diff, configuração segura, documentação e evidências; convenções de branch/commits ainda não estão definidas (e podem ser dispensáveis para o fluxo atual).
 
@@ -26,10 +26,10 @@ Este backlog registra lacunas observáveis, não decisões já aprovadas. Itens 
 ### B2 — Base técnica reproduzível
 
 - [ ] **B2.1 — Verificar ambiente e comandos de build/teste.** Confirmar SDK disponível, compilar a solução e executar os testes existentes; registrar falhas preexistentes e comandos confiáveis.
-- [ ] **B2.2 — Decidir e executar a estratégia de atualização do framework.** Comparar estado atual (.NET 8) com alvo arquitetural (.NET 10), validar disponibilidade do SDK e compatibilidade dos pacotes, então atualizar de forma isolada e reproduzível.
+- [ ] **B2.2 — Confirmar e reproduzir a base de framework.** Os projetos atuais já têm alvo .NET 10, igual à arquitetura; corrigir instruções desatualizadas que dizem .NET 8 e verificar SDK/build/testes em B2.1. Qualquer atualização futura de framework deve ser uma tarefa isolada, com compatibilidade validada.
 - [ ] **B2.3 — Fixar versões e centralizar configuração de dependências.** Depois da decisão de framework, alinhar versões de EF Core, provider do banco, MediatR e demais pacotes; evitar atualização incidental de dependências sem compatibilidade verificada.
 - [ ] **B2.4 — Tornar a persistência configurável por ambiente.** Substituir banco InMemory usado pela API por persistência durável conforme decisão B0.1; manter configurações locais seguras e não versionar credenciais.
-- [ ] **B2.5 — Versionar e validar migrations.** Escolher abordagem, gerar migrations revisáveis e demonstrar criação/reconstrução do schema num ambiente local reproduzível.
+- [ ] **B2.5 — Versionar e validar migrations.** A abordagem foi definida em ADR-002; gerar migrations revisáveis e demonstrar criação/reconstrução do schema num ambiente local reproduzível.
 - [ ] **B2.6 — Definir fluxo local para banco e backup.** Documentar inicialização, configuração, backup e restauração do banco escolhido sem adicionar infraestrutura além do necessário.
 - [ ] **B2.7 — Corrigir a política CORS permissiva.** Restringir origens ao contexto de desenvolvimento/operação definido e documentar configuração; não manter `AllowAnyOrigin` como padrão para uma aplicação com dados financeiros.
 
@@ -45,8 +45,8 @@ Este backlog registra lacunas observáveis, não decisões já aprovadas. Itens 
 
 ### B4 — Primeiro incremento do produto
 
-- [ ] **B4.1 — Delimitar o primeiro incremento e seus critérios de aceite.** Priorizar a fundação e importação histórica conforme decisões consolidadas, mantendo o escopo pequeno e verificável.
-- [ ] **B4.2 — Especificar contrato da planilha de origem.** Identificar tabelas/cabeçalhos suportados, dados brutos preservados, fórmulas sem valor calculado, tabelas excluídas e tratamento de inconsistências.
+- [ ] **B4.1 — Definir critérios de aceite do primeiro incremento.** O recorte funcional foi aprovado em B0.1 e está registrado no PRD §5.1; definir critérios de aceite e sequência de implementação.
+- [ ] **B4.2 — Especificar contrato da planilha de origem.** A fonte histórica está definida como a planilha financeira existente. Identificar arquivo/exportação, abas/cabeçalhos suportados, dados brutos preservados, fórmulas sem valor calculado, tabelas excluídas e tratamento de inconsistências.
 - [ ] **B4.3 — Definir idempotência e resolução de conflitos de importação.** Escolher chave/estratégia após inspecionar dados reais; garantir reimportação sem duplicação e sem sobrescrever silenciosamente edições da aplicação.
 - [ ] **B4.4 — Implementar importação com rastreabilidade.** Importar somente as fontes aprovadas, preservar origem e valores brutos relevantes, oferecer relatório de validação e tornar reexecução segura.
 - [ ] **B4.5 — Validar dados importados.** Comparar contagens e valores por competência/grupo com a fonte, revisar amostras e documentar exceções antes de tratar a migração como concluída.
@@ -77,6 +77,11 @@ B1.1–B1.4 podem avançar em paralelo com B0/B2 e orientam a execução dos dem
 
 - Estado do Git no início da atualização: havia alterações preexistentes em `.cursor/rules/registro-de-decisoes.mdc`, `.cursor/rules/aprendizado-evolutivo.mdc`, `.cursor/agents/` e `docs/agent-workflow/`; foram preservadas.
 - A solução e todos os projetos (`src/` e `tests/`) têm `TargetFramework` `net10.0`; os pacotes EF Core/InMemory estão em `10.0.14`. Isso contradiz o texto do agente `.cursor/agents/desenvolvedor-finance-control.md` e regras existentes que descrevem o legado como .NET 8.
-- A direção do banco segue sem decisão reconciliada: `docs/decisions/decisoes-arquiteturais-ambiente-agentico.md` indica SQLite, enquanto `docs/architecture/architecture.md` indica PostgreSQL. B0.1 continua pendente e bloqueia decisões dependentes.
+- PostgreSQL foi confirmado pela responsável em 05/11/2026 e registrado no ADR-001; SQLite permanece documentado como alternativa considerada. A API ainda usa EF Core InMemory.
 - A API usa EF Core InMemory e ainda define CORS com `AllowAnyOrigin`; não há projetos/arquivos de migrations, importador histórico ou consultas SQL read-only implementados.
 - Não foi executado build/teste nesta atualização documental; a atualização de status não dependeu de validação de compilação.
+- O cenário-alvo de hospedagem doméstica foi mantido; a arquitetura esclarece que apenas os procedimentos de deployment e detalhes operacionais estavam adiados.
+- A responsável definiu a planilha financeira existente como origem da importação histórica e separou CSV bancário como fluxo distinto; formato de exportação e abas ficam para B4.2.
+- O primeiro incremento foi aprovado em 05/11/2026: fundação, despesas, importação da planilha histórica, consulta/edição e SQL read-only; os demais requisitos do MVP permanecem em incrementos posteriores.
+- B0.1 foi concluído em `docs/decisions/reconciliacao-especificacoes.md`; B4.1 ainda precisa definir critérios de aceite e B4.2 o contrato exato da planilha.
+- Foi criado `compose.yaml` para PostgreSQL 18.6, com volume nomeado e porta publicada somente em loopback. `docker compose config --quiet`, YAML e regra de exclusão de `.env` foram verificados. O container não iniciou: o CLI/Compose existem, mas o acesso ao daemon é negado pelo socket do Docker neste ambiente, inclusive na tentativa elevada.

@@ -153,6 +153,8 @@ Os indicadores abaixo são propostas iniciais. As metas quantitativas serão def
 | SQL | Consultas personalizadas sobre os dados |
 | Visualizações | Gráficos e análises personalizáveis |
 
+O escopo acima representa o MVP completo do produto e será entregue em incrementos. O primeiro incremento aprovado inclui fundação técnica reproduzível, despesas, importação histórica da planilha financeira existente, consulta/edição básica e consultas SQL somente leitura. As demais capacidades desta tabela continuam no MVP e serão implementadas em incrementos posteriores; não são removidas do escopo. A ingestão de CSVs bancários (FR-01) também permanece no MVP, em fluxo separado da importação histórica e fora do primeiro incremento. O arquivo/exportação e as abas da planilha histórica serão definidos no contrato de importação (B4.2).
+
 ### 5.2. Fora do MVP
 
 Os seguintes itens não fazem parte da primeira versão:
@@ -315,7 +317,7 @@ O sistema deve preservar os dados brutos importados, permitindo rastrear a orige
 Prioridade: Must.
 
 **FR-06 — Histórico financeiro**  
-O sistema deve permitir importar os dados históricos atualmente armazenados nas planilhas.
+O sistema deve permitir importar os dados históricos atualmente armazenados na planilha financeira existente. Cada ocorrência mensal histórica deve permanecer como registro da competência correspondente, sem ser substituída por uma regra de recorrência. A definição do arquivo/exportação e das abas suportadas será feita no contrato de importação (B4.2). Esse fluxo é distinto da ingestão recorrente dos CSVs bancários previstos em FR-01.
 
 Prioridade: Must.
 
@@ -567,6 +569,26 @@ Informações originais, inclusive observações e classificações antigas, dev
 **BR-11 — Ausência de informação não significa resposta negativa**
 
 Um campo vazio ou desconhecido não deve ser automaticamente interpretado como falso, não pago ou não aplicável.
+
+**BR-12 — Um lançamento pertence a um único grupo no MVP**
+
+Cada lançamento pertence a exatamente um grupo. Não haverá rateio de um mesmo lançamento entre grupos no MVP.
+
+**BR-13 — Categoria é opcional e única por lançamento**
+
+Um lançamento pode não ter categoria ou ter uma única categoria. A categoria não determina o grupo nem o comportamento financeiro.
+
+**BR-14 — Relação entre parcelas exige evidência**
+
+Parcelas de uma mesma compra só devem ser relacionadas quando houver evidência suficiente; descrições iguais, por si só, não provam que pertencem à mesma compra.
+
+**BR-15 — Rótulos de origem não criam recorrências automaticamente**
+
+Valores de origem como `Fixo` e `AFixo` devem ser preservados como dados de referência na importação histórica e não devem, por si só, gerar ocorrências futuras.
+
+**BR-16 — Estado bruto de pagamento importado deve ser preservado**
+
+O valor bruto de origem, inclusive `Pago` quando presente, deve ser preservado. No primeiro incremento ele não será convertido, sem regra aprovada, em uma interpretação completa de pagamentos; o acompanhamento de pagamentos permanece no escopo do MVP conforme FR-29 a FR-31.
 
 ---
 

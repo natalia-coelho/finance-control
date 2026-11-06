@@ -50,13 +50,16 @@ O trabalho deve priorizar capacidades reutilizáveis de engenharia assistida por
 
 O sistema financeiro será mantido deliberadamente simples. Seu papel é fornecer um domínio real para exercitar o ambiente agêntico.
 
-Escopo funcional inicial já definido:
+O MVP completo permanece o definido em `docs/product/PRD.md`. O primeiro incremento aprovado, que não substitui nem reduz esse MVP, inclui:
 
-- Importar o histórico de despesas da planilha Excel.
+- Fundação técnica reproduzível.
+- Cadastro, consulta e edição básica de despesas.
+- Importar o histórico de despesas da planilha financeira existente; definir o formato de exportação e as abas suportadas em B4.2.
 - Consultar lançamentos por período, grupo, categoria e descrição.
-- Editar lançamentos pela aplicação.
 - Disponibilizar consultas SQL somente leitura.
 - Preservar a origem dos dados importados.
+
+Receitas, cartões/faturas, parcelamentos, recorrências, projeções, pagamentos completos, visualizações e importação recorrente de CSV bancário continuam no MVP descrito pelo PRD e serão entregues em incrementos posteriores. Os CSVs bancários são um fluxo separado da importação histórica da planilha.
 
 Decisões de domínio já tomadas:
 
@@ -69,9 +72,11 @@ Decisões de domínio já tomadas:
 - Parcelas de uma mesma compra poderão ser relacionadas quando houver evidência suficiente; não agrupar apenas por descrição.
 - Valores como `Fixo` e `AFixo` serão preservados como referências de origem, sem mecanismo automático de recorrência.
 - O status `Pago` não será central no domínio, mas seu valor bruto relevante será preservado na importação.
-- Receitas, dívidas, empréstimos, transferências, contas bancárias, pagadores, cartões e faturas completas ficam fora do MVP.
+- Dívidas, empréstimos, transferências, contas bancárias e pagadores não fazem parte do escopo atual do MVP do PRD e requerem Discovery antes de eventual inclusão.
 
 O aplicativo não deve receber funcionalidades apenas porque são interessantes para um sistema financeiro. Cada incremento deve também servir como oportunidade de exercitar uma capacidade do ambiente agêntico.
+
+Esta seção registra a prioridade do projeto e decisões de domínio discutidas. Para requisitos, fronteira do MVP e critérios de aceite do produto, `docs/product/PRD.md` é a fonte canônica; divergências de escopo entre este documento e o PRD devem ser reconciliadas no PRD, com a decisão duradoura registrada em ADR quando aplicável.
 
 ## 4. Arquitetura do ambiente agêntico
 
@@ -169,12 +174,12 @@ As decisões atuais para o aplicativo são:
 - Linguagem: C#.
 - Plataforma: .NET 10.
 - Aplicação: ASP.NET Core.
-- Banco inicial: SQLite.
+- Banco inicial: PostgreSQL.
 - Acesso a dados: Entity Framework Core.
 - Migrações: EF Core Migrations versionadas no Git.
 - Testes: xUnit, com testes unitários e de integração.
 
-SQLite foi escolhido pela simplicidade do uso inicial. O banco ficará no computador que hospeda a aplicação; outros dispositivos acessarão os dados por meio da aplicação, nunca abrindo diretamente o arquivo SQLite pela rede.
+PostgreSQL foi escolhido para a persistência durável inicial. A pessoa responsável aceita configurar e manter o serviço de banco. O acesso dos clientes aos dados financeiros deverá ocorrer pela aplicação, não por acesso direto ao banco. A estratégia operacional detalhada e a hospedagem serão especificadas antes da implantação.
 
 ### 6.2 Hospedagem do aplicativo
 
@@ -184,7 +189,7 @@ SQLite foi escolhido pela simplicidade do uso inicial. O banco ficará no comput
 - Sem hospedagem em nuvem no MVP.
 - Sem exposição de portas à internet.
 - Firewall limitado à rede doméstica.
-- Backup do arquivo SQLite.
+- Rotina de backup e restauração do PostgreSQL a definir antes da implantação.
 
 A máquina hospedeira precisa estar ligada e com a aplicação em execução para permitir o acesso.
 
